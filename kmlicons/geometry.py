@@ -1,8 +1,8 @@
 from xml.etree import ElementTree as et
 
-from kmli.feature import Feature
-from kmli.style import Style, IconStyle, LineStyle, PolyStyle
-from kmli.altitude import altitudeMode, gxaltitudeMode, AltitudeProperty, AltitudeSpace, AltitudeString
+from kmlicons.feature import Feature
+from kmlicons.style import Style, IconStyle, LineStyle, PolyStyle
+from kmlicons.altitude import altitudeMode, gxaltitudeMode, AltitudeProperty, AltitudeSpace, AltitudeString
 
 
 class Coordinates:

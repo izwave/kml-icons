@@ -1,6 +1,7 @@
 from xml.etree import ElementTree as et
-from kmli.feature import Base, Feature
-from kmli.geometry import Geometry, MultiGeometry, Point, LineString, Polygon, altitudeMode, gxaltitudeMode
+import xml.dom.minidom
+from kmlicons.feature import Base, Feature
+from kmlicons.geometry import Geometry, MultiGeometry, Point, LineString, Polygon, altitudeMode, gxaltitudeMode
 
 
 class Kml(Base, Geometry):
@@ -20,15 +21,23 @@ class Kml(Base, Geometry):
 	def addfolder(self, name = None):
 		return Geometry(et.SubElement(self.__geometry,'Folder'), self.__colorstyle)
 
-	def generate(self, filename):
+	def export(self, filename):
 		
 		# style
 		self._gdoc.append(self.__colorstyle)
 		# geometry
 		self._gdoc.append(self.__geometry)
-
-		kmltree = et.ElementTree(self._groot)
-		kmltree.write(filename, encoding="UTF-8", xml_declaration=True)
+		
+		# Gets a string from XML
+		xml_string = et.tostring(self._groot, encoding='utf-8').decode('utf-8')
+		
+		# Parse the XML to add indentation
+		dom = xml.dom.minidom.parseString(xml_string)
+		indented_xml_string = dom.toprettyxml(indent="\t")
+		
+		# Write to file
+		with open(filename, 'w', encoding='utf-8') as f:
+			f.write(indented_xml_string)
 
 if __name__ == '__main__':
 	file = Kml()
@@ -40,13 +49,15 @@ if __name__ == '__main__':
 	pnt.tessellate = '1'
 	file.name = 'oxe'
 	'''
+	
 	coords = [(-23.4567,-46.35),(-23.456,-47.456,0.0), (-23.543,-43.35,0.0)]
-
+	'''
 	ponto = file.addpoint(name = 'POnto', lat=5.9,long=5.4,alt=5.5)
 	#ponto.style.color = 'FAED4F'
 	ponto.style.icon.id = '1849'
 	ponto.style.icon.color = 'A87D4D'
 	ponto.description = 'eaeaae'
+	'''
 
 	ls = file.addlinestring(name = 'linha 1')
 	ls.coordinates.add(coords)
